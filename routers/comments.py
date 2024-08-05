@@ -7,7 +7,7 @@ from database import get_db
 
 comment_router = APIRouter(
     prefix="/comments",
-    tags=["comments"]
+    tags=["Comments"]
 )
 
 @comment_router.post("/", response_model=schema.Comment)

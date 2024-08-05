@@ -3,7 +3,9 @@ from routers.users import user_router
 from routers.movies import movie_router
 from routers.comments import comment_router
 from routers.ratings import rating_router
+from database import engine, Base
 
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title= "Movie Listing API",

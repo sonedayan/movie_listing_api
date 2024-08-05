@@ -3,11 +3,15 @@ from typing import List, Optional
 from datetime import datetime
 
 class UserBase(BaseModel):
-    username: Optional[str] = None
-    email: str
+    username: str
+
 
 class UserCreate(UserBase):
-    password: str
+    email: str
+    hashed_password: str
+
+    model_config = ConfigDict(from_attributes=True)
+
 
 class User(UserBase):
     id: int
@@ -16,7 +20,7 @@ class User(UserBase):
 
 class MovieBase(BaseModel):
     title: str
-    description: Optional[str] = None
+    description: str
     release_date: Optional[datetime] = None
 
 class MovieCreate(MovieBase):
@@ -27,6 +31,9 @@ class Movie(MovieBase):
     user_id: int
 
     model_config = ConfigDict(from_attributes=True)
+
+class MovieUpdate(MovieBase):
+    pass
 
 class RatingBase(BaseModel):
     rating: int

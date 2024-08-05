@@ -7,7 +7,7 @@ from database import get_db
 
 rating_router = APIRouter(
     prefix="/ratings",
-    tags=["ratings"]
+    tags=["Ratings"]
 )
 
 @rating_router.post("/", response_model=schema.Rating)

@@ -12,10 +12,11 @@ from dotenv import load_dotenv
 # import crud
 
 from database import SessionLocal, get_db
+from services import user_service
 
 load_dotenv()
 
-SECRET_KEY = os.environ.get('SECRET_KEY')  # Change this in production
+SECRET_KEY = os.environ.get('SECRET_KEY')
 ALGORITHM = os.environ.get('ALGORITHM')
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.environ.get('ACCESS_TOKEN_EXPIRE_MINUTES'))
 
@@ -25,8 +26,11 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
+def hash_password(password: str):
+    return pwd_context.hash(password)
+
 def authenticate_user(db: Session, username: str, password: str):
-    user = crud.get_user_by_username(db, username)
+    user = user_service.get_user_by_username(db, username)
     if not user or not verify_password(password, user.hashed_password):
         return False
     return user
@@ -50,11 +54,11 @@ def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
-        if username is None:
+        if not username:
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    user = crud.get_user_by_username(db, username=username)
+    user = user_service.get_user_by_username(db, username=username)
     if user is None:
         raise credentials_exception
     return user

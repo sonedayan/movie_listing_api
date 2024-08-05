@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 movie_api_venv
+movie_listing_app.db
 
 # C extensions
 *.so
