@@ -18,7 +18,7 @@ def get_movies(db: Session = Depends(get_db), user: schema.User = Depends(get_cu
         "data": movies
     }
 
-@movie_router.post("/", status_code=status.HTTP_202_ACCEPTED)
+@movie_router.post("/", status_code=status.HTTP_201_CREATED)
 def create_movie(payload: schema.MovieCreate, user: schema.User = Depends(get_current_user), db: Session = Depends(get_db)):
     movie = movies_service.create_movie(db=db, movie=payload, user_id=user.id)
     return {
@@ -27,12 +27,12 @@ def create_movie(payload: schema.MovieCreate, user: schema.User = Depends(get_cu
     }
 
 
-@movie_router.get("/{movie_id}")
+@movie_router.get("/{movie_id}", response_model=schema.Movie)
 def get_movie(movie_id: str, user: schema.User = Depends(get_current_user), db: Session = Depends(get_db)):
     '''Get a single movie'''
-    movie = movies_service.get_single_movie(db=db, movie_id=movie_id ,user=user)
-    if movie is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    movie = movies_service.get_single_movie(db, movie_id ,user)
+    if not movie:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Movie not found")
     return {
         "message": "Movie retrieved successfully",
         "data": movie

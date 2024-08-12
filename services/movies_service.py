@@ -17,7 +17,7 @@ def create_movie(db: Session, movie: schema.MovieCreate, user_id: int = None):
     db.refresh(db_movie)
     return db_movie
 
-def get_single_movie(db: Session,  id: int = None):
+def get_single_movie(db: Session,  id: int):
     movie   =  db.query(models.Movie).filter(models.Movie.id == id).first()
 
     if  not movie:

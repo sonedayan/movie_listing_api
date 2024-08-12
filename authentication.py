@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 # import crud
 
 from database import SessionLocal, get_db
-from services import user_service
+from services import auth_service
 
 load_dotenv()
 
@@ -30,7 +30,7 @@ def hash_password(password: str):
     return pwd_context.hash(password)
 
 def authenticate_user(db: Session, username: str, password: str):
-    user = user_service.get_user_by_username(db, username)
+    user = auth_service.get_user_by_username(db, username)
     if not user or not verify_password(password, user.hashed_password):
         return False
     return user
@@ -58,7 +58,7 @@ def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    user = user_service.get_user_by_username(db, username=username)
+    user = auth_service.get_user_by_username(db, username=username)
     if user is None:
         raise credentials_exception
     return user
