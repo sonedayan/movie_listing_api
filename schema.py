@@ -37,26 +37,31 @@ class MovieUpdate(MovieBase):
 
 class RatingBase(BaseModel):
     rating: int
-    movie_id: int
-    user_id: int
 
 class RatingCreate(RatingBase):
     pass
 
 class Rating(RatingBase):
     id: int
+    movie_id: int
+    user_id: int
+
 
     model_config = ConfigDict(from_attributes=True)
 
 class CommentBase(BaseModel):
     content: str
-    movie_id: int
-    user_id: int
+    parent_comment_id: Optional[int] = None
 
 class CommentCreate(CommentBase):
     pass
 
 class Comment(CommentBase):
     id: int
+    user_id: int
+    movie_id: int
 
     model_config = ConfigDict(from_attributes=True)
+
+class CommentUpdate(CommentBase):
+    pass

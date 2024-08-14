@@ -28,23 +28,26 @@ def create_movie(payload: schema.MovieCreate, user: schema.User = Depends(get_cu
 
 
 @movie_router.get("/{movie_id}", response_model=schema.Movie)
-def get_movie(movie_id: str, user: schema.User = Depends(get_current_user), db: Session = Depends(get_db)):
+def get_movie(movie_id: int,  db: Session = Depends(get_db)):
     '''Get a single movie'''
-    movie = movies_service.get_single_movie(db, movie_id ,user)
+    movie = movies_service.get_single_movie(db, movie_id)
     if not movie:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Movie not found")
-    return {
-        "message": "Movie retrieved successfully",
-        "data": movie
-    }
-
+    return movie
 @movie_router.put("/{movie_id}")
-def update_movie(movie_id: int, payload: schema.MovieUpdate, db: Session = Depends(get_db)):
+def update_movie(movie_id: int, movie: schema.MovieUpdate, user: schema.User = Depends(get_current_user), db: Session = Depends(get_db)):
     '''Update a movie'''
-    movie = movies_service.update_movie(db=db, movie_id=movie_id, payload=payload)
+    updated_movie = movies_service.update_movie(db=db, movie_id=movie_id, movie=movie, user_id=user.id)
+    if not updated_movie:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to update this movie")
+    return updated_movie
+
+@movie_router.delete("/{movie_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_movie(movie_id: int, user: schema.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    '''Delete a movie'''
+    movie = movies_service.delete_movie(db=db, movie_id=movie_id, user_id=user.id)
     if movie is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to delete this movie")
     return {
-        "message": "Movie updated successfully",
-        "data": movie
+        "message": "Movie deleted successfully"
     }

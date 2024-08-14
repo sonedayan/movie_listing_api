@@ -11,10 +11,10 @@ auth_router = APIRouter(
     tags=["Authentication"]
 )
 
-# @auth_router.post("/", status_code=status.HTTP_201_CREATED)
-# def create_user(user: schema.UserCreate, db: Session = Depends(get_db)):
+@auth_router.post("/", status_code=status.HTTP_201_CREATED)
+def create_user(user: schema.UserCreate, db: Session = Depends(get_db)):
     
-#     return auth_service.create_user(db=db, user=user)
+    return auth_service.create_user(db=db, user=user)
 
 # @auth_router.get("/{user_id}", response_model=schema.User)
 # def read_user(user_id: int, db: Session = Depends(get_db)):

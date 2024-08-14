@@ -43,6 +43,8 @@ class Comment(Base):
     content = Column(Text, nullable=False)
     movie_id = Column(Integer, ForeignKey('movies.id'), nullable=False)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    parent_comment_id = Column(Integer, ForeignKey('comments.id'), nullable=True)
 
     movie = relationship('Movie', back_populates='comments')
     user = relationship('User', back_populates='comments')
+    replies = relationship("Comment", backref="parent_comment", remote_side=[id])
