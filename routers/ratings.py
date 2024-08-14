@@ -6,9 +6,7 @@ from services import ratings_service, movies_service
 from database import get_db
 from authentication import get_current_user
 
-rating_router = APIRouter(
-    tags=["Ratings"]
-)
+rating_router = APIRouter()
 
 
 ## Creating a rating for a specific movie(Authenticated users only)

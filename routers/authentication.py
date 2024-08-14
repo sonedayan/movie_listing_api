@@ -7,14 +7,12 @@ from authentication import pwd_context, authenticate_user, create_access_token, 
 
 import schema
 
-auth_router = APIRouter(
-    tags=["Authentication"]
-)
+auth_router = APIRouter()
 
-@auth_router.post("/", status_code=status.HTTP_201_CREATED)
-def create_user(user: schema.UserCreate, db: Session = Depends(get_db)):
+# @auth_router.post("/", status_code=status.HTTP_201_CREATED)
+# def create_user(user: schema.UserCreate, db: Session = Depends(get_db)):
     
-    return auth_service.create_user(db=db, user=user)
+#     return auth_service.create_user(db=db, user=user)
 
 # @auth_router.get("/{user_id}", response_model=schema.User)
 # def read_user(user_id: int, db: Session = Depends(get_db)):
@@ -23,7 +21,7 @@ def create_user(user: schema.UserCreate, db: Session = Depends(get_db)):
 #         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 #     return db_user
 
-@auth_router.post("/signup", response_model=schema.User)
+@auth_router.post("/register", response_model=schema.User)
 
 def signup(user: schema.UserCreate, db: Session = Depends(get_db)):
     db_user = auth_service.get_user_by_username(db, username = user.username)

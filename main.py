@@ -12,8 +12,8 @@ app = FastAPI(
     description="An API for managing a list of movies",
 )
 
-app.include_router(router = auth_router)
-app.include_router(router = movie_router)
-app.include_router(router = rating_router)
-app.include_router(router = comment_router)
+app.include_router(router = auth_router, prefix="/auth", tags=["Auth"])
+app.include_router(router = movie_router, prefix="/api", tags=["Movies"])
+app.include_router(router = rating_router, prefix="/api", tags=["Ratings"])
+app.include_router(router = comment_router, prefix="/api", tags=["Comments"])
 
