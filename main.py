@@ -19,4 +19,6 @@ app.include_router(router = movie_router, prefix="/api", tags=["Movies"])
 app.include_router(router = rating_router, prefix="/api", tags=["Ratings"])
 app.include_router(router = comment_router, prefix="/api", tags=["Comments"])
 
-
+@app.get('/')
+def home():
+    return f"Welcome to Movie Listing API"
