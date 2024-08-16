@@ -21,4 +21,4 @@ app.include_router(router = comment_router, prefix="/api", tags=["Comments"])
 
 @app.get('/')
 def home():
-    return f"Welcome to Movie Listing API"
+    return f"Welcome to Movie Listing API...navigate to /docs to view documentation"
