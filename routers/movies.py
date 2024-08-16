@@ -4,12 +4,15 @@ from database import get_db
 from services import movies_service
 import schema as schema
 from authentication import get_current_user
+from logger import logger
 
 movie_router = APIRouter()
 
 @movie_router.get("/movies/", status_code=status.HTTP_200_OK)
 def get_movies(db: Session = Depends(get_db), user: schema.User = Depends(get_current_user), offset: int = 0, limit: int = 10):
+    logger.info(f'Getting movies for {user.username} ...')
     movies = movies_service.get_movies(db, user_id=user.id, offset=offset, limit=limit)
+    logger.info(f"Movies gotten for {user.username}")
     return {
         "message": "Movies retrieved successfully",
         "data": movies

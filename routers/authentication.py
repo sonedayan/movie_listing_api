@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 from services import auth_service
 from database import get_db
 from authentication import pwd_context, authenticate_user, create_access_token, get_current_user
+from logger import logger
+
 
 import schema
 
@@ -21,17 +23,21 @@ auth_router = APIRouter()
 #         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 #     return db_user
 
-@auth_router.post("/register", response_model=schema.User)
+@auth_router.post("/register", response_model=schema.User, status_code=status.HTTP_201_CREATED)
 
 def signup(user: schema.UserCreate, db: Session = Depends(get_db)):
+    logger.info(f"Creating user...")
     db_user = auth_service.get_user_by_username(db, username = user.username)
     hashed_password = pwd_context.hash(user.password)
     if db_user:
+        logger.warning(f"User with {user.username} already exists.")
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Username already registered")
+    logger.info(f"User {user.username} created successfully.")
+
     return auth_service.create_user(db=db, user=user, hashed_password=hashed_password)
 
 @auth_router.post("/login")
-def login(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
+def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
