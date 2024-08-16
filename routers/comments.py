@@ -5,15 +5,17 @@ import schema
 from services import comments_service, movies_service
 from database import get_db
 from authentication import get_current_user
+from logger import logger
 
 comment_router = APIRouter()
 
 @comment_router.post("/movies/{movie_id}/comments", response_model=schema.Comment)
 def create_comment(movie_id:int, comment: schema.CommentCreate, db: Session = Depends(get_db), user: schema.User = Depends(get_current_user)):
+    logger.info("Creating comment...")
     movie = movies_service.get_single_movie(db, movie_id)
     if not movie:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Movie not found")
-    
+    logger.info("Comment created successfully...")
     return comments_service.create_comment(db=db, comment=comment, user_id=user.id, movie_id=movie_id)
 
 @comment_router.get("/movies/{movie_id}/comments", response_model=List[schema.Comment])

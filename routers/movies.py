@@ -20,7 +20,9 @@ def get_movies(db: Session = Depends(get_db), user: schema.User = Depends(get_cu
 
 @movie_router.post("/movies/", status_code=status.HTTP_201_CREATED)
 def create_movie(payload: schema.MovieCreate, user: schema.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    logger.info("Creating a new movie: %s", movie.title)
     movie = movies_service.create_movie(db=db, movie=payload, user_id=user.id)
+    logger.info("Movie created successfully with ID: %d", movie.id)
     return {
         "message": "Movie created successfully",
         "data": movie
@@ -44,10 +46,12 @@ def update_movie(movie_id: int, movie: schema.MovieUpdate, user: schema.User = D
 
 @movie_router.delete("/movies/{movie_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_movie(movie_id: int, user: schema.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    
     '''Delete a movie'''
     movie = movies_service.delete_movie(db=db, movie_id=movie_id, user_id=user.id)
     if movie is None:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to delete this movie")
+    logger.info("Movie deleted successfully with ID: %d", movie_id)
     return {
         "message": "Movie deleted successfully"
     }

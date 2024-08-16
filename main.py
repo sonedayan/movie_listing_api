@@ -5,7 +5,6 @@ from routers.comments import comment_router
 from routers.ratings import rating_router
 from database import engine, Base
 
-from logger import logger
 
 Base.metadata.create_all(bind=engine)
 
