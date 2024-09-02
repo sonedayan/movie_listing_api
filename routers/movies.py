@@ -20,7 +20,7 @@ def get_movies(db: Session = Depends(get_db), user: schema.User = Depends(get_cu
 
 @movie_router.post("/movies/", status_code=status.HTTP_201_CREATED)
 def create_movie(payload: schema.MovieCreate, user: schema.User = Depends(get_current_user), db: Session = Depends(get_db)):
-    logger.info("Creating a new movie: %s", movie.title)
+    logger.info("Creating a new movie: %s", payload.title)
     movie = movies_service.create_movie(db=db, movie=payload, user_id=user.id)
     logger.info("Movie created successfully with ID: %d", movie.id)
     return {
