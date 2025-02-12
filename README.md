@@ -1,6 +1,6 @@
 # Movie Listing API
 
-This project is a Movie Listing API built with FastAPI. The API allows users to list movies, view listed movies, rate them, and add comments. The application is secured using JWT (JSON Web Tokens), ensuring that only the user who listed a movie can edit or delete it. The application is also deployed on a cloud platform, making it accessible publicly.
+This project is a Movie Listing API built with FastAPI. The API allows users to list movies, view listed movies, rate them, and add comments. The application is secured using JWT (JSON Web Tokens), ensuring that only the user who listed a movie can edit or delete it. The application is also deployed on a cloud platform(Render), making it accessible publicly.
 
 # Features
 
